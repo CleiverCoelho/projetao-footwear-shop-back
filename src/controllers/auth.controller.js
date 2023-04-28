@@ -38,3 +38,36 @@ export async function signIn(req, res) {
         res.status(500).send(err.message)
     }
   };
+
+  
+
+  export async function getUserData(req,res){
+    const { authorization } = req.headers;
+  const token = authorization?.replace('Bearer ', '');
+  const usercollection = db.collection("usercollection");
+
+  if(!token) {res.sendStatus(401);}
+
+  const session = await db.collection("sessions").findOne({ token });
+  if (!session) res.sendStatus(401);
+
+	const user = await usercollection.findOne({ 
+		_id: session.userId 
+	})
+
+  if(user) {
+    const purchasescollection = db.collection("purchases");
+    try{
+        const pedidos = await purchasescollection.find({user: user.email}).toArray()
+        //tirar os produtos dessas compras
+        const { name, email, password, rua, complemento, numero, cidade, estado } = user;
+        const userepedidos = {pedidos, name, email, password, rua, complemento, numero, cidade, estado};
+        res.send(userepedidos);
+    }
+    catch(error){
+        return res.status(500).send(err.message);
+    }
+  } else {
+    res.sendStatus(401);
+  }
+  }

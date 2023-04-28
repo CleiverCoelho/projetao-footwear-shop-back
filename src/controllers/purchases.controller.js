@@ -17,7 +17,7 @@ export async function postPurchases(req,res){
   if(user) {
     const purchasescollection = db.collection("purchases");
     try{
-        const novacompra = await purchasescollection.insertOne({user: user.email, produto, quantidade, valor })
+        const novacompra = await purchasescollection.insertOne({user: user.email, produto , quantidade, valor })
         res.sendStatus(201)
     }
     catch(error){
