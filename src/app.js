@@ -4,6 +4,9 @@ import authRouter from "./routers/authRouter.js";
 import productsrouter from "./routers/products.router.js";
 import purchasesrouter from "./routers/purchases.router.js";
 import { Router } from "express";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
@@ -18,5 +21,5 @@ router.use(purchasesrouter);
 app.use(Router);
 
 
-const PORT = 5000
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`)) 
+
+app.listen(process.env.PORT, () => console.log(`Servidor rodando na porta ${PORT}`)) 
