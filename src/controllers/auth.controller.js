@@ -59,9 +59,8 @@ export async function signIn(req, res) {
     const purchasescollection = db.collection("purchases");
     try{
         const pedidos = await purchasescollection.find({user: user.email}).toArray()
-        //tirar os produtos dessas compras
-        const { name, email, password, rua, complemento, numero, cidade, estado } = user;
-        const userepedidos = {pedidos, name, email, password, rua, complemento, numero, cidade, estado};
+        const { name, email } = user;
+        const userepedidos = {pedidos, name, email, password};
         res.send(userepedidos);
     }
     catch(error){

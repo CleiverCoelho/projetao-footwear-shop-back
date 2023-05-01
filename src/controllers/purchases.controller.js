@@ -3,7 +3,7 @@ export async function postPurchases(req,res){
   const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
   const usercollection = db.collection("usercollection");
-  const { produto, quantidade, valor } = req.body;
+  const { quantidade, name } = req.body;
 
   if(!token) {res.sendStatus(401);}
 
@@ -16,9 +16,16 @@ export async function postPurchases(req,res){
 
   if(user) {
     const purchasescollection = db.collection("purchases");
+    const productscollection = db.collection("products");
     try{
-        const novacompra = await purchasescollection.insertOne({user: user.email, produto , quantidade, valor })
-        res.sendStatus(201)
+        const acharinfo = await productscollection.findOne({name})
+        if(acharinfo){
+          const novacompra = await purchasescollection.insertOne({user: user.email, brand: acharinfo.brand, name, image:acharinfo.image, quantidade, valor: acharinfo.valor })
+          res.sendStatus(201)
+        }
+        else{
+          res.sendStatus(401)
+        }
     }
     catch(error){
         return res.status(500).send(err.message);

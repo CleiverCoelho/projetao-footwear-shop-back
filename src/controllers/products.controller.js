@@ -43,7 +43,7 @@ export async function getProductbyName(req,res){
   if(user) {
     const productscollection = db.collection("products");
     try{
-        const produtos = await productscollection.find({name: req.body.name}).toArray();
+        const produtos = await productscollection.find({busca: req.body.busca}).toArray();
         res.send(produtos)
     }
     catch(error){
