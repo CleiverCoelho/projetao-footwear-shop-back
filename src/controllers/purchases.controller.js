@@ -1,6 +1,6 @@
 
 export async function postPurchases(req,res){
-    const { authorization } = req.headers;
+  const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
   const usercollection = db.collection("usercollection");
   const { produto, quantidade, valor } = req.body;
