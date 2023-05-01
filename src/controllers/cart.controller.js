@@ -25,12 +25,11 @@ export async function getCartProducts(req, res) {
     // const userToken = req.headers.authorization;
     // para integrar com o front
     const userToken = req.headers.authorization?.replace("Bearer ", "");
-    const {color, size, price} = req.body;
+    const {quantidade, name} = req.body;
   
     const userTokenSession = await db.collection('sessions').findOne({token: userToken});
     if(!userTokenSession) return res.status(401).send('usuario nao pode fazer requisicao');
   
-    const idUser = userTokenSession.idUser;
   
     const useSchemaParametros = joi.object({
       price: joi.number().precision(2).required(),
@@ -38,14 +37,15 @@ export async function getCartProducts(req, res) {
       size: joi.string().required()
     });
   
-    const validaRequisicao = useSchemaParametros.validate({req.body});
+    const validaRequisicao = useSchemaParametros.validate(req.body);
     if(validaRequisicao.error) {
       const errors = validaRequisicao.error.details.map((detail) => detail.message);
       return res.status(422).send(errors);
     }
   
     try {
-        const newProduct = {color, size, price, idUser}
+        const produtoescolhido = db.collection("products").findOne({name})
+        const newProduct = {quantidade, valor: produtoescolhido.valor, name, brand: produtoescolhido.brand, user: user.email, image: produtoescolhido.image}
     
         await db.collection('cart').insertOne(newProduct);
         res.status(200).send('produto adicionado no carrinho com suceeso');
