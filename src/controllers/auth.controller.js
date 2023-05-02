@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import db from "../db.js";
+import joi from "joi";
 
 export async function signUp(req, res) {
     const { name, email, password} = req.body
@@ -31,8 +32,8 @@ export async function signIn(req, res) {
         if (!passwordIsCorrect) return res.status(401).send("Senha incorreta")
 
         const token = uuid();
-        await db.collection("sessions").insertOne({ token, email : user.email, name: user.name, idUser : user._id })
-        return res.status(200).send({token, idUser: user._id, name: user.name})
+        await db.collection("sessions").insertOne({ token, userId : user._id })
+        return res.status(200).send({token, name: user.name})
 
     } catch (err) {
         res.status(500).send(err.message)
@@ -44,7 +45,7 @@ export async function signIn(req, res) {
   export async function getUserData(req,res){
     const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("usercollection");
+  const usercollection = db.collection("users");
 
   if(!token) {res.sendStatus(401);}
 

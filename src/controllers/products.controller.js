@@ -1,7 +1,11 @@
+import db from "../db.js";
+
+
+
 export async function getAllproducts (req,res){
     const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("usercollection");
+  const usercollection = db.collection("users");
 
   if(!token) {res.sendStatus(401);}
 
@@ -29,7 +33,7 @@ export async function getAllproducts (req,res){
 export async function getProductbyName(req,res){
     const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("usercollection");
+  const usercollection = db.collection("users");
 
   if(!token) {res.sendStatus(401);}
 
@@ -57,7 +61,7 @@ export async function getProductbyName(req,res){
 export async function getProductbyBrand(req,res){
     const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("usercollection");
+  const usercollection = db.collection("users");
 
   if(!token) {res.sendStatus(401);}
 

@@ -1,8 +1,9 @@
+import db from "../db.js";
 
 export async function postPurchases(req,res){
   const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("usercollection");
+  const usercollection = db.collection("users");
   const { quantidade, name } = req.body;
 
   if(!token) {res.sendStatus(401);}

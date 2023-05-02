@@ -1,4 +1,5 @@
-import { getAllproducts, getProductbyBrand, getProductbyName } from "./products.controller";
+import { getAllproducts, getProductbyBrand, getProductbyName } from "./products.controller.js";
+import { validamodelo } from "../middlewares/universal.middleware.js";
 
 const productsrouter = Router();
 

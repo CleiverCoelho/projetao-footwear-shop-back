@@ -1,5 +1,5 @@
-import { postPurchases } from "./purchases.controller";
-import { purchaseSchema } from "../schemas/purchaseSchema";
+import { postPurchases } from "./purchases.controller.js";
+import { purchaseSchema } from "../schemas/purchaseSchema.js";
 
 const purchasesrouter = Router();
 
