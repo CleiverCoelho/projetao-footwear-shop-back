@@ -1,5 +1,6 @@
 import joi from "joi";
 import db from "../db.js";
+import { ObjectId } from 'mongodb';
 
 export async function getCartProducts(req, res) {
     
@@ -15,9 +16,9 @@ export async function getCartProducts(req, res) {
   
 
     try {
-        const cart = await db.collection("carts").findOne({ user: user.email });
+        const cart = await db.collection("cart").find({ user: user.email }).toArray();
         if(cart){
-          res.send(cart)
+          res.send(cart);
         }
         else{
           res.sendStatus(401)
@@ -35,6 +36,7 @@ export async function getCartProducts(req, res) {
     // para integrar com o front
     const userToken = req.headers.authorization?.replace("Bearer ", "");
     const {id} = req.params;
+    console.log(id)
     if(!id) return res.status(401).send("id nao existe");
   
     const userTokenSession = await db.collection('sessions').findOne({token: userToken});
@@ -44,15 +46,25 @@ export async function getCartProducts(req, res) {
       _id: userTokenSession.userId 
     });
   
-    const productOnDb = await db.collection('products').findOne({_id : id});
-  
+    const productOnDb = await db.collection('products').findOne({_id : new ObjectId(id)});
+    if(!productOnDb) return res.status(400).send("produto nao cadastrado");
    
     try {
       // adiciona um por vez, quantidade pode ser modificada no carrinho
-        const newCartProduct = {...productOnDb, user: user.email, quantity: 1};
-    
-        await db.collection('carts').insertOne(newCartProduct);
-        res.status(200).send('produto adicionado no carrinho com suceeso');
+        const newCartProduct = {
+          img: productOnDb.img, 
+          user: user.email, 
+          quantity: 1,
+          name: productOnDb.name,
+          price: productOnDb.price,
+          color: productOnDb.color,
+          brand: productOnDb.brand
+        };
+        if(!newCartProduct) return res.status(401).send("produto nao existe");
+
+        console.log(productOnDb);
+        await db.collection('cart').insertOne(newCartProduct);
+        res.status(200).send(newCartProduct);
       
     } catch (error) {
         console.error(error);

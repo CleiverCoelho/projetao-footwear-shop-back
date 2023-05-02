@@ -22,6 +22,6 @@ router.use(purchasesrouter);
 router.use(cartRouter);
 app.use(router)
 
+const PORT = process.env.PORT || 5000; 
 
-
-app.listen(process.env.PORT, () => console.log(`Servidor rodando na porta ${process.env.PORT}`)) 
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`)) 
