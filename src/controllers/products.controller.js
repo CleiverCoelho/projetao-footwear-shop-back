@@ -7,6 +7,16 @@ export async function getAllproducts (req,res){
 
   const productscollection = db.collection("products");
   try{
+    if(req.body.name){
+      const produtos = await productscollection.find({name: req.body.name}).toArray();
+      if(produtos){
+        res.send(produtos)
+      }
+      else{
+        res.sendStatus(401);
+      }
+        
+    }
     const produtos = await productscollection.find().toArray();
     res.send(produtos);
   }
@@ -21,8 +31,8 @@ export async function getProductbyName(req,res){
   
     const productscollection = db.collection("products");
     try{
-        const produtos = await productscollection.find({name: req.body.name}).toArray();
-        res.send(produtos)
+
+        
     }
     catch(error){
         return res.status(500).send(err.message);
@@ -31,20 +41,8 @@ export async function getProductbyName(req,res){
 }
 
 export async function getProductbyBrand(req,res){
-    const { authorization } = req.headers;
-  const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("users");
+  
 
-  if(!token) {res.sendStatus(401);}
-
-  const session = await db.collection("sessions").findOne({ token });
-  if (!session) res.sendStatus(401);
-
-	const user = await usercollection.findOne({ 
-		_id: session.userId 
-	})
-
-  if(user) {
     const productscollection = db.collection("products");
     try{
         const produtos = await productscollection.find({brand: req.params.brand}).toArray();
@@ -53,9 +51,7 @@ export async function getProductbyBrand(req,res){
     catch(error){
         return res.status(500).send(err.message);
     }
-  } else {
-    res.sendStatus(401);
-  }
+  
 }
 
 
