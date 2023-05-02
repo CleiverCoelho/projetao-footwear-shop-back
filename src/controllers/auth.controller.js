@@ -32,7 +32,7 @@ export async function signIn(req, res) {
         if (!passwordIsCorrect) return res.status(401).send("Senha incorreta")
 
         const token = uuid();
-        await db.collection("sessions").insertOne({ token, userId : user._id, email: user.email });
+        await db.collection("sessions").insertOne({ token, userId : user._id })
         return res.status(200).send({token, name: user.name})
 
       }  catch(error){
@@ -70,4 +70,34 @@ export async function signIn(req, res) {
   } else {
     res.sendStatus(401);
   }
+  }
+
+  export async function editUser(req,res){
+    const { authorization } = req.headers;
+    const { name, email, password } = req.body;
+    const token = authorization?.replace('Bearer ', '');
+    const usercollection = db.collection("users");
+  
+    if(!token) {res.sendStatus(401);}
+  
+    const session = await db.collection("sessions").findOne({ token });
+    if (!session) res.sendStatus(401);
+  
+    const user = await usercollection.findOne({ 
+      _id: session.userId 
+    })
+  
+    if(user) {
+      const usercollection = db.collection("users");
+      const newpassword = bcrypt.hashSync(password, 10);
+      try{
+          const usuarioatualizado = await usercollection.updateOne({email: user.email}, {$set: {email, password: newpassword, name}})
+          res.send("Usuário editado");
+      }
+      catch(error){
+          return res.status(500).send(error.message);
+      }
+    } else {
+      res.sendStatus(401);
+    }
   }
