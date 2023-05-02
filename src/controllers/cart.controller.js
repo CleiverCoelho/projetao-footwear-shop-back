@@ -37,7 +37,7 @@ export async function getCartProducts(req, res) {
     const {quantidades, names} = req.body;
     const useSchemaParametros = joi.object({
       quantidades: joi.array().min(1).required(),
-      names: joi.array().min(1).required()
+      name: joi.array().required()
     });
 
     const validaRequisicao = useSchemaParametros.validate(req.body);
