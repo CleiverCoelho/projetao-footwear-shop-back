@@ -36,6 +36,7 @@ export async function getCartProducts(req, res) {
     // para integrar com o front
     const userToken = req.headers.authorization?.replace("Bearer ", "");
     const {id} = req.params;
+    const {size} = req.body;
     console.log(id)
     if(!id) return res.status(401).send("id nao existe");
   
@@ -58,7 +59,8 @@ export async function getCartProducts(req, res) {
           name: productOnDb.name,
           price: productOnDb.price,
           color: productOnDb.color,
-          brand: productOnDb.brand
+          brand: productOnDb.brand,
+          size
         };
         if(!newCartProduct) return res.status(401).send("produto nao existe");
 

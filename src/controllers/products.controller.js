@@ -1,7 +1,6 @@
+import { ObjectId } from "mongodb";
 import db from "../db.js";
 import joi from "joi"
-
-
 
 export async function getAllproducts (req,res){
 
@@ -14,35 +13,6 @@ export async function getAllproducts (req,res){
       return res.status(500).send(error.message);
   }
 } 
-
-
-export async function getProductbyName(req,res){
-    const { authorization } = req.headers;
-  const token = authorization?.replace('Bearer ', '');
-  const usercollection = db.collection("users");
-
-  if(!token) {res.sendStatus(401);}
-
-  const session = await db.collection("sessions").findOne({ token });
-  if (!session) res.sendStatus(401);
-
-	const user = await usercollection.findOne({ 
-		_id: session.userId 
-	})
-
-  if(user) {
-    const productscollection = db.collection("products");
-    try{
-        const produtos = await productscollection.find({busca: req.query.busca}).toArray();
-        res.send(produtos)
-    }
-    catch(error){
-        return res.status(500).send(err.message);
-    }
-  } else {
-    res.sendStatus(401);
-  }
-}
 
 export async function getProductbyBrand(req,res){
     const { authorization } = req.headers;
@@ -71,6 +41,21 @@ export async function getProductbyBrand(req,res){
     res.sendStatus(401);
   }
 }
+export async function getProductbyId (req,res){
+
+  const {id} = req.params;
+  if(!id) return res.status(401).send("id nao foi passado corretamente")
+
+  const productCollection = db.collection("products");
+  try{
+    const produto = await productCollection.findOne({_id : new ObjectId(id)})
+    console.log(produto)
+    res.send(produto);
+  }
+  catch(error){
+      return res.status(500).send(error.message);
+  }
+} 
 
 
 export async function admPostProducts(req, res) {
