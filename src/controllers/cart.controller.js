@@ -10,7 +10,7 @@ export async function getCartProducts(req, res) {
     if (!session) res.sendStatus(401);
     const usercollection = db.collection("users");
     const user = await usercollection.findOne({ 
-      _id: userTokenSession.userId 
+      _id: session.userId 
     });
   
 

@@ -35,9 +35,9 @@ export async function signIn(req, res) {
         await db.collection("sessions").insertOne({ token, userId : user._id })
         return res.status(200).send({token, name: user.name})
 
-    } catch (err) {
-        res.status(500).send(err.message)
-    }
+      }  catch(error){
+          return res.status(500).send(error.message);
+      }
   };
 
   
@@ -60,12 +60,12 @@ export async function signIn(req, res) {
     const purchasescollection = db.collection("purchases");
     try{
         const pedidos = await purchasescollection.find({user: user.email}).toArray()
-        const { name, email } = user;
+        const { name, email, password } = user;
         const userepedidos = {pedidos, name, email, password};
         res.send(userepedidos);
     }
     catch(error){
-        return res.status(500).send(err.message);
+        return res.status(500).send(error.message);
     }
   } else {
     res.sendStatus(401);

@@ -34,7 +34,7 @@ export async function getAllproducts (req,res){
       }
     }
     catch(error){
-        return res.status(500).send(err.message);
+        return res.status(500).send(error.message);
     }
   } else {
     res.sendStatus(401);

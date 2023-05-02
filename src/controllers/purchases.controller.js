@@ -26,7 +26,7 @@ export async function postPurchases(req,res){
           res.sendStatus(201)
         }
         else{
-          res.sendStatus(401)
+          res.sendStatus(422)
         }
     }
     catch(error){
