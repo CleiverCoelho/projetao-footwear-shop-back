@@ -29,12 +29,14 @@ export async function getCartProducts(req, res) {
   
     const userTokenSession = await db.collection('sessions').findOne({token: userToken});
     if(!userTokenSession) return res.status(401).send('usuario nao pode fazer requisicao');
+    const user = await usercollection.findOne({ 
+      _id: userTokenSession.userId 
+    });
   
   
     const useSchemaParametros = joi.object({
-      price: joi.number().precision(2).required(),
-      color: joi.string().required(),
-      size: joi.string().required()
+      quantidade: joi.number().required().min(1),
+      name: joi.string().required()
     });
   
     const validaRequisicao = useSchemaParametros.validate(req.body);

@@ -9,6 +9,7 @@ export async function postPurchases(req,res){
 
   const session = await db.collection("sessions").findOne({ token });
   if (!session) res.sendStatus(401);
+  
 
 	const user = await usercollection.findOne({ 
 		_id: session.userId 
