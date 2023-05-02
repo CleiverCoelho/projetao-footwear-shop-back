@@ -60,6 +60,7 @@ export async function getCartProducts(req, res) {
           price: productOnDb.price,
           color: productOnDb.color,
           brand: productOnDb.brand,
+          idProduto: productOnDb._id,
           size
         };
         if(!newCartProduct) return res.status(401).send("produto nao existe");

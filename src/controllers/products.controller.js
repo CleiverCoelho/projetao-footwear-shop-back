@@ -44,15 +44,20 @@ export async function getProductbyBrand(req,res){
 export async function getProductbyId (req,res){
 
   const {id} = req.params;
-  if(!id) return res.status(401).send("id nao foi passado corretamente")
+  if(!id) return res.status(400).send("id nao foi passado corretamente")
 
   const productCollection = db.collection("products");
+  if(!productCollection) return res.status(400).send("produto collecton de base")
   try{
-    const produto = await productCollection.findOne({_id : new ObjectId(id)})
-    console.log(produto)
-    res.send(produto);
+    const produto = await productCollection.findOne({_id : new ObjectId(id)});
+    if(!produto) return res.status(401).send("produto nao encontrado")
+    const novoObj = {name: produto.name, color: produto.color, price: produto.price, img: produto.img, brand: produto.brand}
+    // console.log({...produto})
+    console.log(produto.name);
+    res.send(novoObj);
   }
   catch(error){
+    console.log("ERoooooooo")
       return res.status(500).send(error.message);
   }
 } 
