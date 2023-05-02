@@ -1,10 +1,10 @@
-import { getAllproducts, getProductbyBrand, getProductbyName } from "./products.controller.js";
+import { getAllproducts, getProductbyBrand, getProductbyName } from "../controllers/products.controller.js";
 import { validamodelo } from "../middlewares/universal.middleware.js";
+import { Router } from "express";
 
 const productsrouter = Router();
 
-productsrouter.get('/produtos/:marca', validaModelo(produtocommarca),getProductbyBrand);
-productsrouter.get('/produtos/:nome', validaModelo(produtocomnome), getProductbyName);
+productsrouter.get('/produtos/:brand', getProductbyBrand);
 productsrouter.get('/produtos', getAllproducts );
 
 export default productsrouter;

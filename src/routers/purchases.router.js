@@ -1,6 +1,8 @@
-import { postPurchases } from "./purchases.controller.js";
-import { purchaseSchema } from "../schemas/purchaseSchema.js";
 
+import { postPurchases } from "../controllers/purchases.controller.js";
+import { purchaseSchema } from "../schemas/purchaseSchema.js";
+import { Router } from "express";
+import { validamodelo } from "../middlewares/universal.middleware.js";
 const purchasesrouter = Router();
 
 
