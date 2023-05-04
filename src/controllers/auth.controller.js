@@ -43,7 +43,7 @@ export async function signIn(req, res) {
   
 
   export async function getUserData(req,res){
-    const { authorization } = req.headers;
+  const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
   const usercollection = db.collection("users");
 
@@ -57,11 +57,11 @@ export async function signIn(req, res) {
 	})
 
   if(user) {
-    const purchasescollection = db.collection("purchases");
     try{
-        const pedidos = await purchasescollection.find({user: user.email}).toArray()
+        const pedidos = await db.collection("purchases").find({user: user.email}).toArray()
+        console.log(pedidos)
         const { name, email, password } = user;
-        const userepedidos = {pedidos, name, email, password};
+        const userepedidos = {pedidos, user};
         res.send(userepedidos);
     }
     catch(error){
@@ -71,6 +71,7 @@ export async function signIn(req, res) {
     res.sendStatus(401);
   }
   }
+
 
   export async function editUser(req,res){
     const { authorization } = req.headers;
@@ -98,6 +99,37 @@ export async function signIn(req, res) {
           return res.status(500).send(error.message);
       }
     } else {
+      res.sendStatus(401);
+    }
+  }
+
+  export async function postRequests(req, res){
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+    const usercollection = db.collection("users");
+    const pedidos = req.body;
+  
+    if(!token) {res.sendStatus(401);}
+  
+    const session = await db.collection("sessions").findOne({ token });
+    if (!session) res.sendStatus(401);
+  
+    const user = await usercollection.findOne({ 
+      _id: session.userId 
+    })
+   
+    if (user){
+      try {
+        await db.collection('purchases').insertOne(pedidos);
+        console.log(db.collection('purchases'))
+        res.status(200).send("Pedido adicionado");
+      
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
+
+    }else {
       res.sendStatus(401);
     }
   }
